@@ -9,12 +9,21 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+/**
+ * Implementación de {@link BlueprintPersistence} respaldada por PostgreSQL
+ * mediante {@link JdbcTemplate}. Marcada como {@link Primary} para ser la
+ * implementación preferida por Spring cuando hay múltiples beans.
+ */
 @Repository
 @Primary
 public class PostgresBlueprintPersistence implements BlueprintPersistence {
 
     private final JdbcTemplate jdbc;
 
+    /**
+     * Crea el repositorio con el {@link JdbcTemplate} inyectado.
+     * @param jdbc plantilla JDBC configurada contra la base de datos
+     */
     public PostgresBlueprintPersistence(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
@@ -50,7 +59,7 @@ public class PostgresBlueprintPersistence implements BlueprintPersistence {
     @Override
     public Blueprint getBlueprint(String author, String name) throws BlueprintNotFoundException {
         List<Blueprint> list = jdbc.query(
-                "SELECT author, name FROM blueprints WHERE author=? AND name=?",
+        "SELECT author, name FROM blueprints WHERE author=? AND name=?",
                 BP_ROW_MAPPER, author, name);
         if (list.isEmpty()) throw new BlueprintNotFoundException("Blueprint not found: " + author + "/" + name);
         Blueprint bp = list.get(0);

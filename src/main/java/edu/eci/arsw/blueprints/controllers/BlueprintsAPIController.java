@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+/**
+ * Controlador REST para operaciones CRUD sobre {@link Blueprint}.
+ */
 @RestController
 @Tag(name = "Blueprints", description = "Operaciones sobre Blueprints")
 @RequestMapping("/api/v1/blueprints")
@@ -24,6 +27,10 @@ public class BlueprintsAPIController {
 
     private final BlueprintsServices services;
 
+    /**
+     * Constructor con inyección del servicio.
+     * @param services capa de servicios de blueprints
+     */
     public BlueprintsAPIController(BlueprintsServices services) { this.services = services; }
 
     // GET /blueprints
@@ -33,6 +40,10 @@ public class BlueprintsAPIController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Consulta exitosa",
                 content = @Content(schema = @Schema(implementation = ApiResponse.class)))
         })
+    /**
+     * Lista todos los blueprints disponibles.
+     * @return respuesta con el conjunto de blueprints
+     */
     public ResponseEntity<ApiResponse<Set<Blueprint>>> getAll() {
         Set<Blueprint> data = services.getAllBlueprints();
         return ResponseEntity.ok(new ApiResponse<>(200, "execute ok", data));
@@ -47,6 +58,11 @@ public class BlueprintsAPIController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Autor sin blueprints",
                 content = @Content(schema = @Schema(implementation = ApiResponse.class)))
         })
+    /**
+     * Obtiene los blueprints de un autor.
+     * @param author autor a consultar
+     * @return respuesta con el conjunto o 404 si no existen
+     */
     public ResponseEntity<?> byAuthor(@PathVariable String author) {
         try {
             Set<Blueprint> data = services.getBlueprintsByAuthor(author);
@@ -66,6 +82,12 @@ public class BlueprintsAPIController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "No encontrado",
                 content = @Content(schema = @Schema(implementation = ApiResponse.class)))
         })
+    /**
+     * Obtiene un blueprint específico.
+     * @param author autor
+     * @param bpname nombre del blueprint
+     * @return respuesta con el blueprint o 404 si no existe
+     */
     public ResponseEntity<?> byAuthorAndName(@PathVariable String author, @PathVariable String bpname) {
         try {
             Blueprint data = services.getBlueprint(author, bpname);
@@ -85,6 +107,11 @@ public class BlueprintsAPIController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida",
                 content = @Content(schema = @Schema(implementation = ApiResponse.class)))
         })
+    /**
+     * Crea un nuevo blueprint.
+     * @param req cuerpo de la solicitud con autor, nombre y puntos
+     * @return 201 si se crea, 400 si hay conflicto o error de persistencia
+     */
     public ResponseEntity<?> add(@Valid @RequestBody NewBlueprintRequest req) {
         try {
             Blueprint bp = new Blueprint(req.author(), req.name(), req.points());
@@ -106,6 +133,13 @@ public class BlueprintsAPIController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "No encontrado",
                 content = @Content(schema = @Schema(implementation = ApiResponse.class)))
         })
+    /**
+     * Agrega un punto a un blueprint existente.
+     * @param author autor del blueprint
+     * @param bpname nombre del blueprint
+     * @param p punto a agregar
+     * @return 202 si se agrega, 404 si no existe
+     */
     public ResponseEntity<?> addPoint(@PathVariable String author, @PathVariable String bpname,
                                       @RequestBody Point p) {
         try {
@@ -118,6 +152,12 @@ public class BlueprintsAPIController {
         }
     }
 
+    /**
+     * Request body para crear un nuevo blueprint.
+     * @param author autor del blueprint
+     * @param name nombre del blueprint
+     * @param points lista de puntos
+     */
     public record NewBlueprintRequest(
             @NotBlank String author,
             @NotBlank String name,

@@ -9,8 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Elimina puntos consecutivos duplicados (x,y) para reducir redundancia.
- * Perfil: "redundancy"
+ * Filtro que elimina puntos consecutivos duplicados (misma coordenada {@code x,y}).
+ *
+ * <p>Ejemplo: la secuencia [(1,1), (1,1), (2,2)] se transforma a
+ * [(1,1), (2,2)].</p>
+ *
+ * <p>Activación mediante perfil Spring: {@code "redundancy"}.</p>
  */
 @Component
 @Profile("redundancy")
