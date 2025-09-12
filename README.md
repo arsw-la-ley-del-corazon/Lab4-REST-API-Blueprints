@@ -31,6 +31,32 @@
 
 - Configuracion de base de datos PostgreSQL con Docker
 
+Cramos las tablas en la base de datos con el siguiente script:
+
+```sql
+-- Schema for PostgreSQL
+CREATE TABLE IF NOT EXISTS blueprints (
+    author VARCHAR(100) NOT NULL,
+    name   VARCHAR(200) NOT NULL,
+    PRIMARY KEY (author, name)
+);
+
+CREATE TABLE IF NOT EXISTS blueprint_points (
+    id     BIGSERIAL PRIMARY KEY,
+    author VARCHAR(100) NOT NULL,
+    name   VARCHAR(200) NOT NULL,
+    x      INTEGER NOT NULL,
+    y      INTEGER NOT NULL,
+    CONSTRAINT fk_blueprint
+        FOREIGN KEY (author, name)
+        REFERENCES blueprints(author, name)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_points_blueprint ON blueprint_points(author, name);
+
+```
+
 - Implementacion de neuvo repositotio *PostgresBlueprintPersistence*
 
 - Mantener el contrato de la interfaz *BlueprintPersistence*
