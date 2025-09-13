@@ -13,6 +13,7 @@ public interface BlueprintPersistence {
      * @param bp blueprint a guardar
      * @throws BlueprintPersistenceException si ya existe un blueprint con la misma identidad
      */
+
     void saveBlueprint(Blueprint bp) throws BlueprintPersistenceException;
 
     /**
