@@ -32,6 +32,20 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+    <!-- Actuator para métricas y healthchecks -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!-- Exportador de métricas Prometheus via Micrometer -->
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
@@ -41,8 +55,12 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.3</version>
+    </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -61,6 +79,16 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <image>
+            <!-- Nombre de imagen OCI generada por buildpacks (Paketo) -->
+            <name>arsw-la-ley-del-corazon/blueprints:${project.version}</name>
+            <env>
+              <!-- Asegurar versión de JVM -->
+              <BP_JVM_VERSION>21</BP_JVM_VERSION>
+            </env>
+          </image>
+        </configuration>
       </plugin>
     </plugins>
   </build>

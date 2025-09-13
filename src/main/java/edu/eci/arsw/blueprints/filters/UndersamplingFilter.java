@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Undersampling: conserva 1 de cada 2 puntos (índices pares), reduciendo la densidad.
- * Perfil: "undersampling"
+ * Filtro de submuestreo (undersampling) que conserva uno de cada dos puntos
+ * (índices pares), reduciendo la densidad de la secuencia de puntos.
+ *
+ * <p>Si el blueprint tiene 2 puntos o menos, no se realizan cambios.
+ * Activación mediante perfil Spring: {@code "undersampling"}.</p>
  */
 @Component
 @Profile("undersampling")

@@ -8,11 +8,18 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * Implementación en memoria de {@link BlueprintPersistence} basada en un
+ * {@link ConcurrentHashMap}. Útil para pruebas o ejecución sin base de datos.
+ */
 @Repository
 public class InMemoryBlueprintPersistence implements BlueprintPersistence {
 
     private final Map<String, Blueprint> blueprints = new ConcurrentHashMap<>();
 
+    /**
+     * Inicializa el repositorio con datos de ejemplo.
+     */
     public InMemoryBlueprintPersistence() {
         // Sample data 1:1 style (author/name key)
         Blueprint bp1 = new Blueprint("john", "house",
