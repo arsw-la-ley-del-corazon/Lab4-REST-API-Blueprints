@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: blueprint-lab-4
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Laleydelcorazon4
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      # Inicializa el esquema y datos en el primer arranque (si el volumen está vacío)
+      - ./script-database.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - blueprints-net
+    restart: unless-stopped
+
+  app:
+    image: arsw-la-ley-del-corazon/blueprints:1.0.0
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Override de propiedades para apuntar al servicio 'db'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Laleydelcorazon4
+      # Opcional: expone métricas actuator
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,metrics,prometheus
+    ports:
+      - "8080:8080"
+    networks:
+      - blueprints-net
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+
+networks:
+  blueprints-net:
+    driver: bridge
