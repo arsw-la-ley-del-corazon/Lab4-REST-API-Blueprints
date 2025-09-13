@@ -20,6 +20,24 @@
 - Revisar Paquetes
 
 
+El proyecto está organizado en paquetes que siguen el patrón de capas lógicas
+
+```
+
+- model: contiene las entidades principales, Blueprint y Point. 
+
+- persistence: define la interfaz BlueprintPersistence y su implementación inicial en memoria InMemoryBlueprintPersistence. 
+
+- services: la clase BlueprintsServices coordina la lógica de negocio, aplica filtros y delega en la capa de persistencia. 
+
+- controllers: el BlueprintsAPIController expone la API REST con operaciones CRUD 
+
+- filters: provee distintos filtros (IdentityFilter, RedundancyFilter, UndersamplingFilter) para transformar datos. 
+
+- config: configuración de Swagger y OpenApi
+
+```
+
 - Capa persistence con *InMemoryBlueprintPersistence*
 
 
@@ -64,20 +82,45 @@ CREATE INDEX IF NOT EXISTS idx_points_blueprint ON blueprint_points(author, name
 
 # 3 Buenas Prácticas de API REST
 
-- Cambio de path base de controladore `/api/v1/blueprints`
-
+- Versionamiento en rutas (`/api/v1/blueprints`).  
+- Respuestas uniformes con `ApiResponse<T>`.  
+- Excepciones personalizadas (`BlueprintNotFoundException`, `BlueprintPersistenceException`).  
+- Uso de ResponseEntity para códigos HTTP:  
+  - `200 OK` → consultas exitosas  
+  - `201 Created` → creación de recurso  
+  - `202 Accepted` → actualización aceptada  
+  - `400 Bad Request` → datos inválidos  
+  - `404 Not Found` → recurso inexistente
+    
+- Filtros configurables (`Identity`, `Redundancy`, `Undersampling`) mediante perfiles
 
 ## OpenAPI/ Swagger
 
+- Interfaz de Swagger UI documentando la API REST de Blueprints
+
+<img width="533" height="358" alt="Captura de pantalla 2025-09-13" src="https://github.com/user-attachments/assets/fa31a07d-6263-40bd-8a64-dfdc609b34dd" />
+
+forma interactiva los principales endpoints:
+
+``crear un blueprint (POST), listar todos (GET), consultar  (GET), y agregar puntos a uno existente (PUT)``
+
+Con Swagger se pueden visualizar, probar y validar los endpoints de forma interactiva. Además, genera automáticamente la especificación de la API en **OpenAPI 3.0**.
 
 ## Filtros de *Blueprints*
 
+## Pruebas
+
+- **Model Test:** validación de entidades `Blueprint` y `Point`
+- **Persistence Test:** pruebas en memoria y en PostgreSQL
+- **Service Test:** verificación de la lógica de negocio
+- **Filter Test:** validación de filtros de redundancia y undersampling
+
+## Diagrama de arquitectura
+
+<img width="561" height="255" alt="Captura de pantalla 2025-09-13" src="https://github.com/user-attachments/assets/2a27d30c-b1c1-4b62-9ea7-d89a51fcba82" />
 
 
+## Conclusiones
 
+El laboratorio permitió reforzar el entendimiento de la **arquitectura en capas** y cómo esta facilita la extensibilidad y el mantenimiento del software, la migración desde una persistencia en memoria hacia una base de datos real **PostgreSQL** se realizó de manera fluida gracias a la separación de responsabilidades, con la integración de **Swagger/OpenAPI** se quería potenciar la documentación y las pruebas, permitiendo que cualquier usuario consuma la API sin herramientas externas y los **filtros configurables** sobre cómo aplicar transformaciones dinámicas a los datos de un servicio, aumentando la flexibilidad y adaptabilidad de la aplicación a distintos escenarios
 
-### *BONUS*
-
-- Imagen de contenedor (`spring-boot:build-image`)
-
-- Metricas con Actuator
