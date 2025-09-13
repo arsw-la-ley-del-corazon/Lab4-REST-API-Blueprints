@@ -94,7 +94,7 @@ CREATE INDEX IF NOT EXISTS idx_points_blueprint ON blueprint_points(author, name
     
 - Filtros configurables (`Identity`, `Redundancy`, `Undersampling`) mediante perfiles
 
-## OpenAPI/ Swagger
+# OpenAPI/ Swagger
 
 - Interfaz de Swagger UI documentando la API REST de Blueprints
 
@@ -106,21 +106,37 @@ forma interactiva los principales endpoints:
 
 Con Swagger se pueden visualizar, probar y validar los endpoints de forma interactiva. Además, genera automáticamente la especificación de la API en **OpenAPI 3.0**.
 
-## Filtros de *Blueprints*
+# Filtros de *Blueprints*
 
-## Pruebas
+Implementamos dos filtros para el manejo de puntos en los blueprints: el RedundancyFilter, que elimina puntos duplicados consecutivos optimizando los datos almacenados, y el UndersamplingFilter, que conserva solo uno de cada dos puntos reduciendo la cantidad de información procesada, etos filtros se activan de manera flexible mediante perfiles de Spring (redundancy, undersampling), lo que permite seleccionar en tiempo de ejecución cuál filtro aplicar según la necesidad del sistema
+
+
+# Pruebas
 
 - **Model Test:** validación de entidades `Blueprint` y `Point`
 - **Persistence Test:** pruebas en memoria y en PostgreSQL
 - **Service Test:** verificación de la lógica de negocio
 - **Filter Test:** validación de filtros de redundancia y undersampling
 
-## Diagrama de arquitectura
+# Diagrama de Componentes
 
 <img width="561" height="255" alt="Captura de pantalla 2025-09-13" src="https://github.com/user-attachments/assets/2a27d30c-b1c1-4b62-9ea7-d89a51fcba82" />
 
 
+# Bono
+
+Como bono del laboratorio, se empaquetó el proyecto en una imagen Docker usando el plugin spring-boot:build-image, esto permitió crear la imagen y correrla como un contenedor, al levantar el contenedor, la API REST quedó disponible dentro de Docker, facilitando su portabilidad y despliegue en cualquier entorno sin necesidad de instalar dependencias adicionales
+
+
+<img width="1022" height="251" alt="Captura de pantalla 2025-09-13" src="https://github.com/user-attachments/assets/ada20834-59cb-40ad-8ddd-8df3c245aec9" />
+
+
+<img width="1239" height="351" alt="Captura de pantalla 2025-09-13" src="https://github.com/user-attachments/assets/841b88e0-b181-4abb-a8b6-5a80939d5cac" />
+
+
+
 ## Conclusiones
 
-El laboratorio permitió reforzar el entendimiento de la **arquitectura en capas** y cómo esta facilita la extensibilidad y el mantenimiento del software, la migración desde una persistencia en memoria hacia una base de datos real **PostgreSQL** se realizó de manera fluida gracias a la separación de responsabilidades, con la integración de **Swagger/OpenAPI** se quería potenciar la documentación y las pruebas, permitiendo que cualquier usuario consuma la API sin herramientas externas y los **filtros configurables** sobre cómo aplicar transformaciones dinámicas a los datos de un servicio, aumentando la flexibilidad y adaptabilidad de la aplicación a distintos escenarios
+El laboratorio permitió reforzar el entendimiento de la **arquitectura en capas** y cómo esta facilita la extensibilidad y el mantenimiento del software, la migración desde una persistencia en memoria hacia una base de datos real **PostgreSQL** se realizó de manera fluida gracias a la separación de responsabilidades, con la integración de 
+**Swagger/OpenAPI** se quería potenciar la documentación y las pruebas, permitiendo que cualquier usuario consuma la API sin herramientas externas y los **filtros configurables** sobre cómo aplicar transformaciones dinámicas a los datos de un servicio, aumentando la flexibilidad y adaptabilidad de la aplicación a distintos escenarios
 
